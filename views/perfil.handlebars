@@ -1,0 +1,17 @@
+
+{{#if payload}}
+{{>navbarConectado}}
+<h2>Bienvenido!</h2>
+<h3>{{payload.first_name}}</h3>
+<h3>{{payload.last_name}}</h3>
+
+
+<form action="">
+    <button type="submit">Desconectarse</button>
+</form>
+{{else}}
+{{>navbarNoConectado}}
+<h2>USUARIO NO CONECTADO</h2>
+{{/if}}
+
+<script src="../static/js/perfil.js"></script>

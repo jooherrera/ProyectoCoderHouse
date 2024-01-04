@@ -1,0 +1,60 @@
+
+{{#if usser}}
+
+{{>navbarConectado}}
+
+{{else}}
+
+{{>navbarNoConectado}}
+
+{{/if}}
+
+<section class="sectionForms">
+<div class="selectProductOrCarts">
+
+    <select id="optionSelect">
+        <option value="productos">Productos</option>
+        <option value="carts">Carts</option>
+    </select>
+</div>
+<div class="divFormProducts ">
+    <form id ="formularioProducts"class="formulario" action="">
+        <input id="idProduct" type="text" placeholder="ID del producto en caso querer buscarlo">
+        <input id="titulo" type="text" placeholder="Titulo Del Producto">
+        <input id="description" type="text" placeholder="Descripcion">
+        <input id="precio" type="number" placeholder="Precio">
+        <input id="codigo" type="number" placeholder="Codigo">
+        <input id="thumbnail" type="text" name="thumbnail" placeholder="thumbnail">
+        <input id="stock" type="number" placeholder="Stock">
+        <input type="file" id="inputImg" disabled >
+        <select id="selectFormProducts" name="peticion">
+        <option value="GET">VER / GET </option>
+        <option value="POST">AGREGAR / POST</option>
+        <option value="PUT">MODIFICAR / PUT</option>
+        <option value="DELETE">BORRAR / DELETE</option>
+        </select>
+        <input id="buttonFormProducts" type="submit" value="Enviar Peticion">
+    </form>
+ </div>
+ <div class="divFormCarts hidden">
+        <form class="formulario" action="">
+            <input type="text" id="cIdInput" placeholder="Ingrese el ID del Carts">
+            <input type="text" id="productID" placeholder="Ingrese el ID del producto a agregar">
+            <select id="selectFormCart">
+            <option value="getCartsSelect">GET</option>
+            <option value="postCartsSelect">POST</option>
+            </select>
+            <input id="buttonFormCarts" type="submit" value="Enviar Peticion">
+        </form>
+ </div>
+ </section>
+ <section class="sectionProducts">
+ <div class="boxElement">
+
+ </div>  
+ </section> 
+</main>
+{{>footer}}
+
+<script src="../socket.io/socket.io.js"></script>
+<script src="../static/js/realTimeProducts.js"></script>

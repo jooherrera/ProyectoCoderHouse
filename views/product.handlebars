@@ -1,0 +1,25 @@
+
+{{#if usuario}}
+{{>navbarConectado}}
+
+{{else}}
+
+{{>navbarNoConectado}}
+{{/if}}
+
+ <div class="box">
+    
+       <p> {{producto._id}}</p>
+       <p> {{producto.title}}</p>
+       <p> {{producto.description}}</p>
+       <p>PRICE: {{producto.price}}</p>
+       <p> STOCK: {{producto.stock}}</p>
+
+        <button > + </button><br>
+        <button onclick="volver()"> VOLVER </button>   
+    </div>
+
+
+{{>footer}}
+<script src="../static/js/home.JS.js"></script>
+

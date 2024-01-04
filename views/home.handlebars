@@ -1,0 +1,58 @@
+
+{{#if usser}}
+
+{{>navbarConectado}}
+
+{{else}}
+
+{{>navbarNoConectado}}
+
+{{/if}}
+
+
+<h2>Home HandleBars</h2>
+<h2>BIENVENIDO</h2>
+<h2>{{usser.first_name}} {{usser.last_name}}</h2>
+
+{{#if usser.isAdmin}}
+<p>Usuario Administrador</p>
+{{/if}}
+<h2>Lista de productos por HandleBars</h2>
+{{#if payload}}
+
+<select name="ordenar" id="ordenar">
+<option value="desc">Ordenar Por Precio</option>
+<option value="desc">Descendente</option>
+<option value="asc">Ascendente</option>
+</select>
+<input type="text" id="inputBuscador" placeholder="Buscardor de Producto">
+<button id="botonBuscar">Buscar</button>
+
+<div class="container">
+    
+    {{#each payload}}
+    <div class="box">
+    
+       <p>{{this._id}}</p>
+       <p>{{this.title}}</p>
+       <p>${{this.price}} </p>
+       <p> STOCK: {{this.stock}}</p>
+
+        <button > + </button><br>
+        <button onclick="descripcionProducto(this)"> Description </button>   
+    </div>
+    {{/each}}
+</div>
+{{else}}
+<p>No hay productos para mostrar</p>
+{{/if}}<br><br>
+<a {{#if hasPrevPage}} href="/?limit={{limit}}&page={{prevPage}}" {{/if}}>Prev</a>
+[{{ page }}]
+<a {{#if hasNextPage}} href="/?limit={{limit}}&page={{nextPage}}" {{/if}}>Next</a><br>
+<br><br>
+Página: <input type="text"> <button onclick="irPagina({{limit}})">ir</button>
+<br><br>
+{{>footer}}
+
+<script src="../socket.io/socket.io.js"></script>
+<script src="../static/js/home.JS.js"></script>

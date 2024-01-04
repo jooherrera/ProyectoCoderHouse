@@ -1,0 +1,34 @@
+
+{{#if payload}}
+{{>navbarConectado}}
+
+{{else}}
+
+{{>navbarNoConectado}}
+{{/if}}
+
+{{#unless payload}}
+<section class="modal">
+   <form action="" method="post" id="formulario">
+    <label for="email">Email</label>
+    <input type="text" name="email" id="email">
+    <label for="constraseña">Contraseña</label>
+    <input type="password" name="" id="constraseña">
+    <input class="butModal" type="submit" value="Log In">
+<button class="butModal butModalC" id="buttonCerrar">Cerrar</button>
+</form>
+{{/unless}}
+</section>
+<section class="boxMessages">
+    <div class="windowsMessages">
+    
+    </div>
+    <div class="inferiorChat">
+    <input type="text" placeholder="Mensaje..." id="inputMensaje" >
+    <input type="button" value="Enviar" id="buttonMessage">
+    </div>
+</section>
+
+{{>footer}}
+<script src="/socket.io/socket.io.js"></script>
+<script src="../static/js/chatWindows.js"></script>
