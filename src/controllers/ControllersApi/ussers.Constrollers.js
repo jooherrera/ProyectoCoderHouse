@@ -1,8 +1,4 @@
-import {
-  ussersMongoose,
-  conectar,
-  desconectar,
-} from "../../dao/services/index.js";
+import { ussersMongoose } from "../../dao/services/index.js";
 import { hashear, hasheadasSonIguales } from "../../dao/services/crypt.js";
 import { emailAdmin } from "../../dao/services/config.js";
 
@@ -10,9 +6,7 @@ import { emailAdmin } from "../../dao/services/config.js";
 export async function register(req, res) {
   try {
     req.body.password = hashear(req.body.password);
-    await conectar();
     const reg = await ussersMongoose.create(req.body);
-    await desconectar();
 
     if (reg) {
       req.session["usser"] = {
@@ -42,9 +36,8 @@ export async function register(req, res) {
 // si existe el nobmre y usuario enviado desde el formulario de login , se guarda en res.session y en req.cookie
 export async function login(req, res) {
   try {
-    await conectar();
     const usserFind = await ussersMongoose.findOne(req.body).lean();
-    await desconectar();
+
     if (!usserFind) {
       return res
         .status(400)
@@ -88,11 +81,7 @@ export async function logout(req, res) {
 
 export async function sesionActual(req, res) {
   try {
-    await conectar();
-    const usuario = await ussersMongoose
-      .findOne({ email: req["user"].email })
-      .lean();
-    res.json({ status: "success", payload: usuario });
+    res.json({ status: "success", payload: req.user });
   } catch (error) {
     res.status(404).json({ status: "error", message: error.message });
   }
@@ -101,7 +90,6 @@ export async function sesionActual(req, res) {
 export async function cambiarPass(req, res) {
   try {
     req.body.password = hashear(req.body.password);
-    await conectar();
     const actualizado = await ussersMongoose.updateOne(
       { email: req.body.email },
       { $set: { password: req.body.password } },
@@ -113,7 +101,6 @@ export async function cambiarPass(req, res) {
         .status(404)
         .json({ status: "error", message: "usuario no encontrado" });
     }
-
     res.json({ status: "success", payload: actualizado });
   } catch (error) {
     res.status(400).json({ status: "error", message: error.message });

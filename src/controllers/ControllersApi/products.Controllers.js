@@ -1,6 +1,5 @@
 import { managerProducts } from "../../dao/models/fs/productManager.js";
 import { productsMongoose } from "../../dao/services/index.js";
-import { conectar, desconectar } from "../../dao/services/index.js";
 import { changeNameAndId } from "../../middlewares/multer.Middlewares.js";
 
 // funciones GET constrollers de los productos
@@ -13,7 +12,7 @@ export async function getProductsController(req, res) {
     //const array = await managerProducts.getProducts();
 
     //FORMA CON MONGOOSE:
-    await conectar();
+
     const array = await productsMongoose.find().lean();
     /* const limitar = await productsMongoose.aggregate[
       {
@@ -21,7 +20,7 @@ export async function getProductsController(req, res) {
       }
     ];
 */
-    await desconectar();
+
     if (!cantidad) {
       return res.status(200).json({ status: "success", products: array });
     } else {
@@ -43,12 +42,11 @@ export async function getProductsByIdController(req, res) {
   try {
     const _id = req.params.pid;
     // const productID = await managerProducts.getProductById(id);
-    await conectar();
+
     const productID = await productsMongoose.findById(_id).lean();
-    await desconectar();
+
     return res.status(200).json({ status: "success", products: productID });
   } catch (error) {
-    await desconectar();
     return res.status(400).json({
       status: "error",
       message: "error en mostrar el producto por ID ",
@@ -112,19 +110,17 @@ export async function eliminarProductoIdController(req, res) {
 export async function postAgregarProductMongoDBController(req, res) {
   try {
     // changeNameAndId(req);
-    await conectar();
+
     const nuevoProduct = await productsMongoose.create(req.body);
-    await desconectar();
+
     return res.status(201).json(nuevoProduct.toObject());
   } catch (error) {
-    await desconectar();
     return res.status(400).json({ status: "error", message: error.message });
   }
 }
 
 export async function actualizarProductoIdMongoController(req, res) {
   try {
-    await conectar();
     const _id = req.params.pid;
     const productUpdate = await productsMongoose.findByIdAndUpdate(
       _id,
@@ -133,7 +129,7 @@ export async function actualizarProductoIdMongoController(req, res) {
         new: true,
       }
     );
-    await desconectar();
+
     if (!productUpdate) {
       return res
         .status(400)
@@ -142,20 +138,17 @@ export async function actualizarProductoIdMongoController(req, res) {
       return res.status(200).json(productUpdate);
     }
   } catch (error) {
-    await desconectar();
     return res.status(400).json({ status: "error", message: error.message });
   }
 }
 
 export async function deleteProductMongoose(req, res) {
   try {
-    await conectar();
     const _id = req.params.pId;
     const productoEliminado = await productsMongoose
       .findByIdAndDelete(_id)
       .lean();
 
-    await desconectar();
     if (!productoEliminado) {
       return res.status(400).json({
         status: "error",
@@ -164,7 +157,6 @@ export async function deleteProductMongoose(req, res) {
     }
     return res.status(200).json(productoEliminado);
   } catch (error) {
-    await desconectar();
     return res.status(400).json({ status: "error", message: error.message });
   }
 }

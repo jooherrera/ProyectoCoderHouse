@@ -8,7 +8,7 @@ const socket = io();
 
 //Se guardara el usuario al hacer el Loggin de la ventana
 let usuario;
-
+wind;
 //el boton cerrar de la ventana(modal) cierra la ventana,
 cerrarButton.addEventListener("click", () => {
   document.querySelector(".modal").classList.add("hidden");
@@ -17,16 +17,24 @@ cerrarButton.addEventListener("click", () => {
 //Se envia el usuario y la contraseña a validar, si existe , cierra la venta y guarda el Email en la variable usuarios, sino tira una alerta
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const response = await fetch(`http://localhost:8080/api/sessions/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    // @ts-ignore
-    body: new URLSearchParams(new FormData(form)),
+  const usser = JSON.stringify({
+    email: document.querySelector("#email").value,
+    password: document.querySelector("#password").value,
   });
-  const res = await response.json();
+  const response = await fetch(
+    `http://localhost:8080/api/sessions/loginPassport`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      // @ts-ignore
+      body: usser,
+      //new URLSearchParams(new FormData(form)),
+    }
+  );
 
-  if (res.status === "success") {
-    usuario = ` ${res.payload.first_name} ${res.payload.last_name}`;
+  if (response.status === 201) {
+    const res = await response.json();
+    usuario = ` ${res.payload.first_name}}`;
     document.querySelector(".modal").classList.add("hidden");
   }
 });

@@ -15,9 +15,7 @@ const UssersManager = new Schema(
   {
     strict: "throw",
     versionKey: false,
-    static: {
-      statics: {},
-    },
+    static: {},
   }
 );
 

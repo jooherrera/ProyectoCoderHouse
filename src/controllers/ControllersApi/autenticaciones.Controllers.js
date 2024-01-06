@@ -32,6 +32,7 @@ passport.use(
   "loginGithub",
   new GitHubStrategy(
     {
+      //Informacion sacada de Github al momento de
       clientID: GITHUB_CLIENT_ID,
       clientSecret: GITHUB_CLIENT_SECRET,
       callbackURL: GITHUB_URL_CALLBACK,
@@ -41,7 +42,7 @@ passport.use(
       let usuario = await ussersMongoose.findOne({ email: profile.username });
       if (!usuario) {
         usuario = await ussersMongoose.create({
-          first_name: profile.displayName,
+          first_name: profile.username,
           email: profile.username,
         });
       }

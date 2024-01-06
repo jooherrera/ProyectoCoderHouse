@@ -1,10 +1,6 @@
 import { managerProducts } from "../../dao/models/fs/productManager.js";
 
-import {
-  cartsMongoose,
-  conectar,
-  desconectar,
-} from "../../dao/services/index.js";
+import { cartsMongoose } from "../../dao/services/index.js";
 import {
   productsMongoose,
   ussersMongoose,
@@ -38,15 +34,11 @@ export async function homeWeb(req, res) {
     }
     if (req.query.query) {
     }
-
-    await conectar();
     const productos = await productsMongoose.paginate(
       //se agrega la paginacion con un criterio de busqueda  y opciones de paginacion
       criterioBusqueda,
       opcionesDePaginacion
     );
-
-    await desconectar();
 
     return res.status(200).render("home.handlebars", {
       titulo: "Home",
@@ -60,7 +52,7 @@ export async function homeWeb(req, res) {
       hasNextPage: productos.hasNextPage, //si existe pagina siguiente
       hayDocs: productos.docs > 0, //si docs es mayor a 0 los envia
       prevLink: productos.prevLink,
-      usser: req.session["usser"], //envia el usser conectado con fist_name , last_name , y isAdmin
+      usser: req.user, //envia el usser conectado con fist_name , last_name , y isAdmin
     });
   } catch (error) {
     return res.status(400).json({
@@ -73,9 +65,7 @@ export async function homeWeb(req, res) {
 // se conecta a base de datos de chats y y los muestra
 export async function chatHandlebars(req, res) {
   try {
-    await conectar();
     const mensajes = await messageMongoose.find().lean(); //busca los chats y los convierte en objects con lean
-    await desconectar();
     if (mensajes) {
       //si los encuentra , llama a la funcion del socket res["sendMessage"] para mostrar a todos los mensajes
       res["sendMessage"]();
@@ -96,13 +86,11 @@ export async function chatHandlebars(req, res) {
 export async function logginUsser(req, res) {
   try {
     if (!req.session["usser"]) {
-      await conectar();
       const usser = req.query.usser;
       const pass = req.query.password;
       const isValid = await ussersMongoose
         .findOne({ email: usser, password: pass })
         .lean();
-      await desconectar();
       console.log(isValid);
       if (!isValid) {
         return res
@@ -132,9 +120,8 @@ export async function logginUsser(req, res) {
 export async function mostrarProducto(req, res) {
   try {
     const pid = req.params.pid;
-    await conectar();
+
     const producto = await productsMongoose.findById(pid).lean();
-    await desconectar();
 
     return res.status(200).render("product.handlebars", { producto });
   } catch (error) {
@@ -145,9 +132,9 @@ export async function mostrarProducto(req, res) {
 export async function mostrarProductosCarrito(req, res) {
   try {
     const cid = req.params.cid;
-    await conectar();
+
     const carrito = await cartsMongoose.findById(cid).lean();
-    desconectar();
+
     if (carrito) {
       res
         .status(200)
@@ -174,10 +161,10 @@ export async function mostrarLogin(req, res) {
 }
 
 export async function verPerfil(req, res) {
-  if (req.session["usser"]) {
+  if (req.user) {
     res.status(201).render("perfil.handlebars", {
       status: "success",
-      payload: req.session["usser"],
+      payload: req.user,
     });
   } else {
     res.status(201).render("perfil.handlebars", {
@@ -186,6 +173,6 @@ export async function verPerfil(req, res) {
   }
 }
 
-export async function mostrarGitHub(req, res) {
-  req.render("github.handlebars");
+export async function restartPassword(req, res) {
+  res.render("restartPassword.handlebars");
 }

@@ -1,14 +1,8 @@
-import {
-  conectar,
-  desconectar,
-  messageMongoose,
-} from "../../dao/services/index.js";
+import { messageMongoose } from "../../dao/services/index.js";
 
 export async function saveAndSend(req, res) {
   try {
-    await conectar();
     const mensaje = await messageMongoose.create(req.body);
-    await desconectar();
     res["sendMessage"]();
     res.status(200);
   } catch (error) {

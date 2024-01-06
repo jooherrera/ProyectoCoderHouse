@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import { Router } from "express";
 import passport from "passport";
 import {
   realTimeProductsWeb,
@@ -6,13 +6,12 @@ import {
   chatHandlebars,
   mostrarProducto,
   mostrarLogin,
-  mostrarGitHub,
   verPerfil,
   mostrarProductosCarrito,
   ventanaRegister,
+  restartPassword,
   homeWeb,
 } from "../../controllers/ControllersWeb/web.Constrollers.js";
-import { cookieCreate } from "../../middlewares/cookies.Middlewares.js";
 
 export const webRouter = new Router();
 
@@ -35,7 +34,6 @@ webRouter.get(
     failureRedirect: "/login",
   })
 );
-webRouter.get("/githubcallback", mostrarGitHub);
 //////Muestra ventana de Login.handlebars
 webRouter.get("/login", mostrarLogin);
 
@@ -44,6 +42,8 @@ webRouter.get("/perfil", verPerfil);
 
 //Chequea que el usser y el password enviados en el boddy esten en la base de datos de mongo
 webRouter.get("/logginUsser", logginUsser);
+
+webRouter.get("/restartpassword", restartPassword);
 
 //Muestra los productos con paginate con Handlebars
 

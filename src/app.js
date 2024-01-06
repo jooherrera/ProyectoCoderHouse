@@ -15,6 +15,8 @@ import {
   passportInitialize,
   passportSession,
 } from "./controllers/ControllersApi/autenticaciones.Controllers.js";
+import { conectar } from "./dao/services/index.js";
+await conectar();
 const app = express();
 
 //Motor de plantillas : Handlebars

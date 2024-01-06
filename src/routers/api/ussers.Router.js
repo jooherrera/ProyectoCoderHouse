@@ -10,11 +10,14 @@ import {
 import { soloLoguedosApi } from "../../controllers/ControllersApi/autorizaciones.Controllers.js";
 export const ussersRouter = new Router();
 
+ussersRouter.use((req, res, next) => {
+  next();
+});
 ussersRouter.get("/current", soloLoguedosApi, sesionActual);
 ussersRouter.post("/register", register);
 ussersRouter.post("/login", login);
 ussersRouter.post(
-  "/",
+  "/loginPassport",
   passport.authenticate("loginLocal", {
     failWithError: true,
   }),
@@ -27,4 +30,4 @@ ussersRouter.post(
 );
 
 ussersRouter.delete("/", logout);
-ussersRouter.put("/cambiarContraseña", cambiarPass);
+ussersRouter.put("/cambiarPassword", cambiarPass);

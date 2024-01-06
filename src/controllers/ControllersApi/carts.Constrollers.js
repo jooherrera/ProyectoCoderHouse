@@ -1,19 +1,14 @@
 import { cartsManager } from "../../dao/models/fs/cartsManager.js";
 import { managerProducts } from "../../dao/models/fs/productManager.js";
 import { productsMongoose } from "../../dao/services/index.js";
-import {
-  cartsMongoose,
-  conectar,
-  desconectar,
-} from "../../dao/services/index.js";
+import { cartsMongoose } from "../../dao/services/index.js";
 //Constrollers de los Carts que se agregaran al Carts Router
 
 //Crea un nuevo carrito vacio
 export async function crearNuevoCarts(req, res) {
   try {
-    await conectar();
     const cartN = await cartsMongoose.create({});
-    await desconectar();
+
     res.status(201).json(cartN);
   } catch (error) {
     res.status(400).json({
@@ -46,7 +41,6 @@ export async function agregarProductosArregloCartsByCId(req, res) {
     const pId = req.params.pid;
     // Buscar el objeto por ID
 
-    await conectar();
     const buscarProduct = await productsMongoose.findOne({ _id: pId });
     const buscarCart = await cartsMongoose.findOne({ _id: cId });
     if (buscarProduct) {
@@ -71,7 +65,6 @@ export async function agregarProductosArregloCartsByCId(req, res) {
       }
       // Guardar el objeto actualizado
       await buscarCart.save();
-      await desconectar();
 
       return res.status(201).json(buscarCart);
     } else {
@@ -87,9 +80,8 @@ export async function agregarProductosArregloCartsByCId(req, res) {
 // Devuelve el arreglo de productos del carrito enviado, en caos que no lo encuentre lo devuelve
 export async function mostrarListaDeProductosByCId(req, res) {
   try {
-    await conectar();
     const cart = await cartsMongoose.findById(req.params.cid).lean();
-    await desconectar();
+
     if (cart) {
       return res.status(200).json(cart.products);
     } else {
@@ -98,7 +90,6 @@ export async function mostrarListaDeProductosByCId(req, res) {
         .json({ status: "ERROR", message: "Id del carrito no encontrado" });
     }
   } catch (error) {
-    await desconectar();
     return res
       .status(404)
       .json({ status: "ERROR", mensaje: "Error en mostrar la lista " });
@@ -108,12 +99,10 @@ export async function mostrarListaDeProductosByCId(req, res) {
 // Envia todos los carritos que esten guardados en la base de datos.
 export async function mostrarListaDeCarts(req, res) {
   try {
-    await conectar();
     const listaCarrito = await cartsMongoose.find().lean();
-    await desconectar();
+
     res.status(200).json(listaCarrito);
   } catch (error) {
-    await desconectar();
     res.status(400).json({ status: "ERROR", message: "Error en la peticion" });
   }
 }
@@ -124,7 +113,6 @@ export async function borrarProductoDelCarrito(req, res) {
     const pid = req.params.pid;
     const cid = req.params.cId;
 
-    await conectar();
     const carritoEncontrar = await cartsMongoose
       .findByIdAndUpdate(
         cid,
@@ -133,17 +121,14 @@ export async function borrarProductoDelCarrito(req, res) {
       )
       .lean();
 
-    await desconectar();
     if (carritoEncontrar) {
       return res.status(200).json(carritoEncontrar);
     } else {
-      await desconectar();
       return res
         .status(400)
         .json({ status: "ERROR", message: "error al borrar el producto" });
     }
   } catch (error) {
-    await desconectar();
     return res.status(400).json({ status: "ERROR", message: message.error });
   }
 }
@@ -156,7 +141,6 @@ export async function actualizarProductoEnElCarrito(req, res) {
     const pid = req.params.pid;
     const cid = req.params.cId;
 
-    await conectar();
     const carritoActualizar = await cartsMongoose.findById(cid);
     if (carritoActualizar) {
       var element;
@@ -169,22 +153,19 @@ export async function actualizarProductoEnElCarrito(req, res) {
       }
       if (element._id == pid) {
         await carritoActualizar.save();
-        await desconectar();
+
         return res.status(200).json(carritoActualizar);
       } else {
-        await desconectar();
         return res
           .status(400)
           .json({ status: "ERROR", message: "ID producto invalido" });
       }
     } else {
-      await desconectar();
       return res
         .status(400)
         .json({ status: "ERROR", message: "ID carts invalido" });
     }
   } catch (error) {
-    await desconectar();
     return res.status(400).json({ status: "ERROR", message: error.message });
   }
 }
@@ -194,13 +175,13 @@ export async function actualizarCarrito(req, res) {
   try {
     const nuevoArreglo = req.body.docs;
     const cid = req.params.cId;
-    await conectar();
+
     const carrito = await cartsMongoose.findOneAndReplace(
       { _id: cid },
       { products: nuevoArreglo },
       { new: true }
     );
-    await desconectar();
+
     if (carrito) {
       return res.status(200).json(carrito);
     } else {
@@ -209,7 +190,6 @@ export async function actualizarCarrito(req, res) {
         .json({ status: "ERROR", message: "ID del carrito invalido" });
     }
   } catch (error) {
-    await desconectar();
     return res.status(400).json({ status: "ERROR", message: error.message });
   }
 }
@@ -217,13 +197,13 @@ export async function actualizarCarrito(req, res) {
 export async function eliminarTodosLosProductosDelCarrito(req, res) {
   try {
     const cid = req.params.cId;
-    await conectar();
+
     const carrito = await cartsMongoose.findOneAndReplace(
       { _id: cid },
       { products: [] },
       { new: true }
     );
-    await desconectar();
+
     if (carrito) {
       return res.status(200).json(carrito);
     } else {
@@ -232,7 +212,6 @@ export async function eliminarTodosLosProductosDelCarrito(req, res) {
         .json({ status: "ERROR", message: "ID del carrito invalido" });
     }
   } catch (error) {
-    await desconectar();
     return res.status(400).json({ status: "ERROR", message: error.message });
   }
 }
