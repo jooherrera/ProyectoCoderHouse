@@ -1,8 +1,8 @@
-import { strict } from "assert";
 import mongoose, { Schema, model } from "mongoose";
 import { randomUUID } from "node:crypto";
 import { hasheadasSonIguales } from "../../services/crypt.js";
 import { conectar, ussersMongoose } from "../../services/index.js";
+
 const UssersManager = new Schema(
   {
     _id: { type: String, default: randomUUID },

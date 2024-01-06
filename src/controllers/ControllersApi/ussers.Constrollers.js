@@ -1,6 +1,6 @@
 import { ussersMongoose } from "../../dao/services/index.js";
 import { hashear, hasheadasSonIguales } from "../../dao/services/crypt.js";
-import { emailAdmin } from "../../dao/services/config.js";
+import { emailAdmin } from "../../conf/config.js";
 
 //Se guarda en la base de datos el usuario enviado desde register.handlebars
 export async function register(req, res) {

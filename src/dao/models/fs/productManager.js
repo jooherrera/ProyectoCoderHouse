@@ -122,4 +122,4 @@ class ProductManager {
   }
 }
 
-export const managerProducts = new ProductManager();
+// export const managerProducts = new ProductManager();

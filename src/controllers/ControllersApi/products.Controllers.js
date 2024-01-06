@@ -1,4 +1,4 @@
-import { managerProducts } from "../../dao/models/fs/productManager.js";
+// import { managerProducts } from "../../dao/models/fs/productManager.js";
 import { productsMongoose } from "../../dao/services/index.js";
 import { changeNameAndId } from "../../middlewares/multer.Middlewares.js";
 
@@ -65,45 +65,46 @@ export async function postAgregarProductController(req, res) {
     });
   }
 }
-
+//!TODO ESTO NECESITA CAMBIARSE POR MONGOOSE
 //Se envia por un body los campos y los valores a actualizar en el producto, ademas de volver a enviar los productos con el socket
-export async function actualizarProductoIdController(req, res) {
-  const objects = req.body;
-  const campos = Object.keys(objects);
-  const valores = Object.values(objects);
-  const id = req.params.pid;
-  try {
-    for (let index = 0; index < campos.length; index++) {
-      await managerProducts.updateProduct(id, campos[index], valores[index]);
-    }
+// export async function actualizarProductoIdController(req, res) {
+//   const objects = req.body;
+//   const campos = Object.keys(objects);
+//   const valores = Object.values(objects);
+//   const id = req.params.pid;
+//   try {
+//     for (let index = 0; index < campos.length; index++) {
+//       await managerProducts.updateProduct(id, campos[index], valores[index]);
+//     }
 
-    res["sendProducts"]();
-    return res.status(201).json(await managerProducts.getProductById(id));
-  } catch (error) {
-    return res.status(400).json({
-      status: "error",
-      message: " Error al Actualizando producto",
-    });
-  }
-}
+//     res["sendProducts"]();
+//     return res.status(201).json(await managerProducts.getProductById(id));
+//   } catch (error) {
+//     return res.status(400).json({
+//       status: "error",
+//       message: " Error al Actualizando producto",
+//     });
+//   }
+// }
 
+//!TODO ESTO NECESITA CAMBIARSE POR MONGOOSE
 //Se elimina el producto de la base de datos y se envia los productos por el socket
-export async function eliminarProductoIdController(req, res) {
-  const id = req.params.pid;
+// export async function eliminarProductoIdController(req, res) {
+//   const id = req.params.pid;
 
-  try {
-    await managerProducts.deleteProductByID(id);
-    res["sendProducts"]();
-    return res
-      .status(201)
-      .json({ status: "success", messagge: `${id} ya no esta en la lista` });
-  } catch (error) {
-    return res.status(400).json({
-      status: "error",
-      message: "error Eliminando producto",
-    });
-  }
-}
+//   try {
+//     await managerProducts.deleteProductByID(id);
+//     res["sendProducts"]();
+//     return res
+//       .status(201)
+//       .json({ status: "success", messagge: `${id} ya no esta en la lista` });
+//   } catch (error) {
+//     return res.status(400).json({
+//       status: "error",
+//       message: "error Eliminando producto",
+//     });
+//   }
+// }
 
 //se crea un producto nuevo en la base de datos
 

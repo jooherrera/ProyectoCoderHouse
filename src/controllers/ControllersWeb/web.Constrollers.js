@@ -1,4 +1,4 @@
-import { managerProducts } from "../../dao/models/fs/productManager.js";
+// import { managerProducts } from "../../dao/models/fs/productManager.js";
 
 import { cartsMongoose } from "../../dao/services/index.js";
 import {
@@ -7,7 +7,7 @@ import {
   messageMongoose,
 } from "../../dao/services/index.js";
 
-import { emailAdmin } from "../../dao/services/config.js";
+import { emailAdmin } from "../../conf/config.js";
 
 export async function realTimeProductsWeb(req, res) {
   return res.status(200).render("realTimeProducts.handlebars", {

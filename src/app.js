@@ -1,5 +1,4 @@
 import express from "express";
-import handlebars from "express-handlebars";
 import { webRouter } from "./routers/web/web.Routers.js";
 import { apiRouter } from "./routers//api/api.Routers.js";
 import { Server } from "socket.io";
@@ -8,33 +7,31 @@ import {
   inyectarSocketServer,
   socketMessage,
 } from "./socket/socket.Controllers.js";
-import { PORT } from "./dao/services/config.js";
+import { PORT, URL_MONGO } from "./conf/config.js";
 import cookieParser from "cookie-parser";
-import session from "./middlewares/sesions.js";
-import {
-  passportInitialize,
-  passportSession,
-} from "./controllers/ControllersApi/autenticaciones.Controllers.js";
-import { conectar } from "./dao/services/index.js";
-await conectar();
+import { sessionConf } from './conf/session.conf.js';
+import { mongoConf } from './conf/mongodb.conf.js';
+import { initializePassport } from './conf/passport.conf.js';
+import { handlebarsConf } from './conf/handlebars.conf.js';
+
+
 const app = express();
 
-//Motor de plantillas : Handlebars
-app.engine("handlebars", handlebars.engine());
-app.set("views", "./views");
+app.use(express.json()); 
+app.use(express.urlencoded({ extended: true })); 
 
-//Middlewares necesarias
-app.use(express.json()); //Poder leer los JSON en las peticiones
-app.use(express.urlencoded({ extended: true })); //Poder leer formularios
-app.use(express.static("./public")); //Indicar las carpetas donde estan las vistas y las imagenes guardadas
+app.use(express.static("./public")); 
 app.use(express.static("./views"));
 app.use("/static", express.static("./static"));
-app.use(session("palabraSecreta")); // agrega el middleware session para usar express -session
+
+
+handlebarsConf(app)//Motor de plantillas : Handlebars
 app.use(cookieParser()); //para usar cookies luego de instalar npm install express cookie-parser
-app.use(passportInitialize, passportSession); //cargo los middlewares de passport
-//Se pone a escuchar en el puerto
+mongoConf(URL_MONGO) // conexion a base de datos
+sessionConf(app,URL_MONGO)//Se cambia por mongo-session
+initializePassport(app) //cargo los middlewares de passport
+
 const server = app.listen(PORT, () => {
-  //Se levanta el servidor y se pone a escuchar en el puerto PORT
   console.log("Conectado al puerto 8080");
 });
 
